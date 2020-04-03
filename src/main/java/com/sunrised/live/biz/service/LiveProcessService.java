@@ -25,6 +25,30 @@ public class LiveProcessService {
     @Autowired
     KuaishouAgentService kuaishouAgentService;
 
+
+    private static final String PREFIX_DOUYIN = "https://v.douyin.com";
+    private static final String PREFIX_KUAISHOU = "https://v.kuaishou.com";
+    private static final String PREFIX_HUAJIAO = "http://h.huajiao.com";
+    private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
+
+
+    public Result startTask(String livePageUrl, String path, String saveName) {
+        String filePath = path + File.separator + saveName + ".mp4";
+        File file = new File(filePath);
+        if (file.exists()) {
+            return Result.fail("文件已存在，重命名");
+        }
+        if (livePageUrl.startsWith(PREFIX_DOUYIN)) {
+            return this.processDouyin(livePageUrl, path, saveName);
+        } else if (livePageUrl.startsWith(PREFIX_KUAISHOU)) {
+            return this.processKuaishou(livePageUrl, path, saveName);
+        } else if (livePageUrl.startsWith(PREFIX_HUAJIAO) || livePageUrl.startsWith(PREFIX_HUAJIAO2)) {
+            return this.processHuajiao(livePageUrl, path, saveName);
+        } else {
+            return Result.fail("只支持抖音、快手、花椒直播页面");
+        }
+    }
+
     /**
      * 处理抖音视频流
      *
@@ -32,7 +56,7 @@ public class LiveProcessService {
      * @param savePath
      * @return
      */
-    public Result processDouyin(String livePageUrl, String savePath, String saveName) {
+    private Result processDouyin(String livePageUrl, String savePath, String saveName) {
 
         if (!this.isSavePathOk(savePath)) {
             return Result.fail("视频保存路径不存在，请重新设置");
@@ -61,7 +85,7 @@ public class LiveProcessService {
      * @param savePath
      * @return
      */
-    public Result processKuaishou(String livePageUrl, String savePath, String saveName) {
+    private Result processKuaishou(String livePageUrl, String savePath, String saveName) {
 
         if (!this.isSavePathOk(savePath)) {
             return Result.fail("视频保存路径不存在，请重新设置");
@@ -93,7 +117,7 @@ public class LiveProcessService {
      * @param savePath
      * @return
      */
-    public Result processHuajiao(String livePageUrl, String savePath, String saveName) {
+    private Result processHuajiao(String livePageUrl, String savePath, String saveName) {
 
         if (!this.isSavePathOk(savePath)) {
             return Result.fail("视频保存路径不存在，请重新设置");
