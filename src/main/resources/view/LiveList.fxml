@@ -19,9 +19,9 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <HBox layoutX="252.0" layoutY="457.0" prefHeight="24.0" prefWidth="162.0">
+                  <HBox layoutX="200.0" layoutY="457.0" prefHeight="24.0" prefWidth="250.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleNewLive" text="新增" />
+                        <Button mnemonicParsing="false" onAction="#handleNewLive" text="添加" />
                         <Button mnemonicParsing="false" onAction="#handleStartLive" text="开始" />
                         <Button mnemonicParsing="false" onAction="#handleStopLive" text="结束" />
                         <Button mnemonicParsing="false" onAction="#handleDeleteLive" text="删除" />
