@@ -1,5 +1,6 @@
 package com.sunrised.live.ui.controller;
 
+import com.google.gson.Gson;
 import com.sunrised.live.model.Live;
 import com.sunrised.live.service.MsgService;
 import com.sunrised.live.ui.view.StartView;
@@ -13,7 +14,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -21,6 +24,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+@Slf4j
 @FXMLController
 public class LiveListController implements Initializable {
 
