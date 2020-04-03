@@ -13,7 +13,7 @@ import java.io.*;
 @Slf4j
 public class StreamGobbler extends Thread {
 
-    private static final long MINUTE_MILLIS=60000L;
+    private static final long MINUTE_MILLIS = 60000L;
 
     public static final String TYPE_ERROR = "ERROR";
     public static final String TYPE_STDOUT = "STDOUT";
@@ -28,16 +28,15 @@ public class StreamGobbler extends Thread {
     long createMillis;
 
 
-
     StreamGobbler(InputStream is, String type) {
         this(is, type, null);
     }
 
     StreamGobbler(InputStream is, OutputStream os, String type, TaskListener taskListener) {
         this(is, type, null);
-        this.commandOs=os;
-        this.createMillis=System.currentTimeMillis();
-        this.taskListener=taskListener;
+        this.commandOs = os;
+        this.createMillis = System.currentTimeMillis();
+        this.taskListener = taskListener;
     }
 
     StreamGobbler(InputStream is, String type, OutputStream redirect) {
@@ -64,17 +63,14 @@ public class StreamGobbler extends Thread {
                     pw.println(line);
                 }
 
-                switch (type) {
-                    case TYPE_ERROR:
-                        break;
-                    case TYPE_STDOUT:
-                        break;
-                }
+                //System.out.println("line:"+line);
 
-                if (this.createMillis>0 && commandOs!=null){
-                    long now=System.currentTimeMillis();
-                    if (now-createMillis>MINUTE_MILLIS*90){
-                        String command="q";
+                taskListener.onSendMsg(line);
+
+                if (this.createMillis > 0 && commandOs != null) {
+                    long now = System.currentTimeMillis();
+                    if (now - createMillis > MINUTE_MILLIS * 90) {
+                        String command = "q";
                         commandOs.write(command.getBytes());
                         commandOs.flush();
                     }

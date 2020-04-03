@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by tamas on 2020/3/26.
@@ -31,6 +33,20 @@ public class LiveProcessService {
     private static final String PREFIX_KUAISHOU = "https://v.kuaishou.com";
     private static final String PREFIX_HUAJIAO = "http://h.huajiao.com";
     private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
+
+    //url 状态 0正在处理 -1 主动结束 -2 被动结束
+    private Map<String, Integer> taskMap;
+
+    private Map<String, Integer> getTaskMap() {
+        if (taskMap == null) {
+            synchronized (taskMap) {
+                if (taskMap == null) {
+                    taskMap = new HashMap<>();
+                }
+            }
+        }
+        return taskMap;
+    }
 
 
     public void startTask(String livePageUrl, String path, String saveName, TaskListener taskListener) {
