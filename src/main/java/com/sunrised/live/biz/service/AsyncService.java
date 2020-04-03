@@ -18,7 +18,7 @@ public class AsyncService {
         String fileName = saveName + ".mp4";
         fileName = fileName.replace(" ", "");
         fileName = fileName.replace(":", "-");
-        LiveFFmpegUtil.downloadLiveVideoStream(m3u8Url, savePath + File.separator + fileName);
+        LiveFFmpegUtil.downloadLiveVideoStream(m3u8Url, savePath + File.separator + fileName, taskListener);
 
     }
 }

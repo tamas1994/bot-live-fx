@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>boofx-live</name>
+    <name>bot-live-fx</name>
     <description>LiveApplication</description>
 
     <parent>

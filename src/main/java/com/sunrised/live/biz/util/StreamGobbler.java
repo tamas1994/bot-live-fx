@@ -1,5 +1,6 @@
 package com.sunrised.live.biz.util;
 
+import com.sunrised.live.biz.TaskListener;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -21,44 +22,29 @@ public class StreamGobbler extends Thread {
     String type;
     OutputStream os;
 
-    StringBuilder errorBuilder;
-    StringBuilder stdBuilder;
+    TaskListener taskListener;
 
     OutputStream commandOs;
     long createMillis;
 
-    boolean isShowOutput;
 
-    public String getErrorInfo(){
-        return errorBuilder.toString();
-    }
-
-    public String getStdInfo(){
-        return stdBuilder.toString();
-    }
 
     StreamGobbler(InputStream is, String type) {
-        this(is, type, null,true);
+        this(is, type, null);
     }
 
-    StreamGobbler(InputStream is, String type, boolean isShowOutput) {
-        this(is, type, null,isShowOutput);
-    }
-
-    StreamGobbler(InputStream is, OutputStream os, String type, boolean isShowOutput) {
-        this(is, type, null,isShowOutput);
+    StreamGobbler(InputStream is, OutputStream os, String type, TaskListener taskListener) {
+        this(is, type, null);
         this.commandOs=os;
         this.createMillis=System.currentTimeMillis();
+        this.taskListener=taskListener;
     }
 
-    StreamGobbler(InputStream is, String type, OutputStream redirect, boolean isShowOutput) {
+    StreamGobbler(InputStream is, String type, OutputStream redirect) {
         this.is = is;
         this.type = type;
         this.os = redirect;
-        this.isShowOutput=isShowOutput;
 
-        this.errorBuilder = new StringBuilder();
-        this.stdBuilder = new StringBuilder();
     }
 
     @Override
@@ -80,22 +66,10 @@ public class StreamGobbler extends Thread {
 
                 switch (type) {
                     case TYPE_ERROR:
-                        if (isShowOutput){
-                            errorBuilder.append(line);
-                            log.info("error:"+line);
-                        }
                         break;
                     case TYPE_STDOUT:
-                        if (isShowOutput){
-                            stdBuilder.append(line);
-                            log.info("stdout:"+line);
-                        }
                         break;
                 }
-
-                //log.info(Thread.currentThread().getName() + "---------" + type + ">" + line);
-
-
 
                 if (this.createMillis>0 && commandOs!=null){
                     long now=System.currentTimeMillis();
@@ -104,7 +78,6 @@ public class StreamGobbler extends Thread {
                         commandOs.write(command.getBytes());
                         commandOs.flush();
                     }
-
                 }
             }
             if (pw != null) {

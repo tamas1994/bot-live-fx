@@ -1,5 +1,6 @@
 package com.sunrised.live.biz.util;
 
+import com.sunrised.live.biz.TaskListener;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -41,10 +42,10 @@ public class CmdUtil {
         }
     }
 
-    public static String runCommandI(String command) {
+    public static String runCommandI(String command, TaskListener taskListener) {
         try {
             if (isWindows()) {
-                command=prehandleCommand(command);
+                command = prehandleCommand(command);
             }
 
             //log.info("command:"+command );
@@ -52,24 +53,15 @@ public class CmdUtil {
             Process p = Runtime.getRuntime().exec(command);
 
 
-
             boolean isShowOutput = true;
-            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(),p.getOutputStream(), StreamGobbler.TYPE_ERROR, isShowOutput);
+            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), p.getOutputStream(), StreamGobbler.TYPE_ERROR, taskListener);
             // kick off stderr
             errorGobbler.start();
-            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), StreamGobbler.TYPE_STDOUT, isShowOutput);
+            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), StreamGobbler.TYPE_STDOUT);
             // kick off stdout
             outGobbler.start();
             p.waitFor();
 
-            String errorMessage = errorGobbler.getErrorInfo();
-            String stdMessage = outGobbler.getStdInfo();
-            if (!MyStringUtils.isEmpty(errorMessage)) {
-                return errorMessage;
-            }
-            if (!MyStringUtils.isEmpty(stdMessage)) {
-                return stdMessage;
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,26 +82,16 @@ public class CmdUtil {
                     commands[i] = prehandleCommand(commands[i]);
                 }
             }
-
             Process p = Runtime.getRuntime().exec(commands);
 
             boolean isShowOutput = true;
-            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), StreamGobbler.TYPE_ERROR, isShowOutput);
+            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), StreamGobbler.TYPE_ERROR);
             // kick off stderr
             errorGobbler.start();
-            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), StreamGobbler.TYPE_STDOUT, isShowOutput);
+            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), StreamGobbler.TYPE_STDOUT);
             // kick off stdout
             outGobbler.start();
             p.waitFor();
-
-            String errorMessage = errorGobbler.getErrorInfo();
-            String stdMessage = outGobbler.getStdInfo();
-            if (!MyStringUtils.isEmpty(errorMessage)) {
-                return errorMessage;
-            }
-            if (!MyStringUtils.isEmpty(stdMessage)) {
-                return stdMessage;
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
