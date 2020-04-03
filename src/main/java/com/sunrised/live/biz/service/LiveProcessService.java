@@ -1,6 +1,7 @@
 package com.sunrised.live.biz.service;
 
 
+import com.sunrised.live.biz.TaskListener;
 import com.sunrised.live.biz.bean.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,20 +33,21 @@ public class LiveProcessService {
     private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
 
 
-    public Result startTask(String livePageUrl, String path, String saveName) {
+    public void startTask(String livePageUrl, String path, String saveName, TaskListener taskListener) {
         String filePath = path + File.separator + saveName + ".mp4";
         File file = new File(filePath);
         if (file.exists()) {
-            return Result.fail("文件已存在，重命名");
+            Result.fail("文件已存在，重命名");
         }
         if (livePageUrl.startsWith(PREFIX_DOUYIN)) {
-            return this.processDouyin(livePageUrl, path, saveName);
+            this.processDouyin(livePageUrl, path, saveName, taskListener);
         } else if (livePageUrl.startsWith(PREFIX_KUAISHOU)) {
-            return this.processKuaishou(livePageUrl, path, saveName);
+            this.processKuaishou(livePageUrl, path, saveName, taskListener);
         } else if (livePageUrl.startsWith(PREFIX_HUAJIAO) || livePageUrl.startsWith(PREFIX_HUAJIAO2)) {
-            return this.processHuajiao(livePageUrl, path, saveName);
+            this.processHuajiao(livePageUrl, path, saveName, taskListener);
         } else {
-            return Result.fail("只支持抖音、快手、花椒直播页面");
+            Result.fail("只支持抖音、快手、花椒直播页面");
+            taskListener.onAddError("只支持抖音、快手、花椒直播页面");
         }
     }
 
@@ -56,24 +58,30 @@ public class LiveProcessService {
      * @param savePath
      * @return
      */
-    private Result processDouyin(String livePageUrl, String savePath, String saveName) {
+    private Result processDouyin(String livePageUrl, String savePath, String saveName, TaskListener taskListener) {
 
         if (!this.isSavePathOk(savePath)) {
-            return Result.fail("视频保存路径不存在，请重新设置");
+            String errorMessage = "视频保存路径不存在，请重新设置";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
 
         DouyinLiveInfo douyinLiveInfo = douyinAgentService.getDouyinLiveInfo(livePageUrl);
         if (douyinLiveInfo == null) {
-            return Result.fail("获取抖音直播信息失败");
+            String errorMessage = "获取抖音直播信息失败";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
         DouyinStreamInfo douyinStreamInfo = douyinAgentService.getDouyinStreamInfo(douyinLiveInfo);
         if (douyinStreamInfo == null) {
-            return Result.fail("获取抖音直播流失败");
+            String errorMessage = "获取抖音直播流失败";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         //TODO 判断直播是否结束
-        asyncService.downloadLiveStream(douyinStreamInfo.getM3u8Url(), savePath, douyinStreamInfo.getNickname(), saveName);
+        asyncService.downloadLiveStream(douyinStreamInfo.getM3u8Url(), savePath, douyinStreamInfo.getNickname(), saveName, taskListener);
         return Result.success("添加抖音用户" + douyinStreamInfo.getNickname() + "的直播流下载任务成功");
     }
 
@@ -85,20 +93,26 @@ public class LiveProcessService {
      * @param savePath
      * @return
      */
-    private Result processKuaishou(String livePageUrl, String savePath, String saveName) {
+    private Result processKuaishou(String livePageUrl, String savePath, String saveName, TaskListener taskListener) {
 
         if (!this.isSavePathOk(savePath)) {
-            return Result.fail("视频保存路径不存在，请重新设置");
+            String errorMessage = "视频保存路径不存在，请重新设置";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         KuaishouStreamInfo kuaishouStreamInfo = kuaishouAgentService.getKuaishouStreamInfo(livePageUrl);
 
         if (kuaishouStreamInfo == null) {
-            return Result.fail("获取快手直播流失败");
+            String errorMessage = "获取快手直播流失败";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         if (kuaishouStreamInfo.isFinished()) {
-            return Result.fail("该快手直播已结束，请换一个链接试试");
+            String errorMessage = "该快手直播已结束，请换一个链接试试";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         String m3u8Url = kuaishouStreamInfo.getM3u8Url();
@@ -106,7 +120,7 @@ public class LiveProcessService {
             String[] strArr = m3u8Url.split("\\?");
             m3u8Url = strArr[0];
         }
-        asyncService.downloadLiveStream(m3u8Url, savePath, kuaishouStreamInfo.getUserName(), saveName);
+        asyncService.downloadLiveStream(m3u8Url, savePath, kuaishouStreamInfo.getUserName(), saveName, taskListener);
         return Result.success("添加快手用户" + kuaishouStreamInfo.getUserName() + "的直播流下载任务成功");
     }
 
@@ -117,20 +131,26 @@ public class LiveProcessService {
      * @param savePath
      * @return
      */
-    private Result processHuajiao(String livePageUrl, String savePath, String saveName) {
+    private Result processHuajiao(String livePageUrl, String savePath, String saveName, TaskListener taskListener) {
 
         if (!this.isSavePathOk(savePath)) {
-            return Result.fail("视频保存路径不存在，请重新设置");
+            String errorMessage = "视频保存路径不存在，请重新设置";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         HuajiaoStreamInfo huajiaoStreamInfo = huajiaoAgentService.getStreamInfoByUrl(livePageUrl);
 
         if (huajiaoStreamInfo == null) {
-            return Result.fail("获取花椒直播流失败");
+            String errorMessage = "获取花椒直播流失败";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         if (huajiaoStreamInfo.isFinished()) {
-            return Result.fail("该花椒直播已结束，请换一个链接试试");
+            String errorMessage = "该花椒直播已结束，请换一个链接试试";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
         }
 
         String m3u8Url = huajiaoStreamInfo.getM3u8Url();
@@ -138,7 +158,7 @@ public class LiveProcessService {
             String[] strArr = m3u8Url.split("\\?");
             m3u8Url = strArr[0];
         }
-        asyncService.downloadLiveStream(m3u8Url, savePath, huajiaoStreamInfo.getNickname(), saveName);
+        asyncService.downloadLiveStream(m3u8Url, savePath, huajiaoStreamInfo.getNickname(), saveName, taskListener);
         return Result.success("添加花椒用户" + huajiaoStreamInfo.getNickname() + "的直播流下载任务成功");
     }
 
