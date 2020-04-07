@@ -141,7 +141,11 @@ public class LiveListController implements Initializable {
             stg.showAndWait();
             Live live = liveEditDialog.getLive();
             if (isInputValid(live)) {
-                liveTable.getItems().add(new Live(live.getLivePageUrl(), live.getPath(), live.getSaveName(), live.getStatus()));
+                String livePathUrl = live.getLivePageUrl().replaceAll(" ", "");
+                String path = live.getPath().replaceAll(" ", "");
+                String saveName = live.getSaveName().replaceAll(" ", "");
+                String status = live.getStatus().replaceAll(" ", "");
+                liveTable.getItems().add(new Live(livePathUrl, path, saveName, status));
             }
         }
     }
@@ -153,6 +157,10 @@ public class LiveListController implements Initializable {
     private void handleStopLive() {
         Live selectedLive = liveTable.getSelectionModel().getSelectedItem();
         if (selectedLive != null) {
+            if(!"开始".equals(selectedLive.getStatus())) {
+                Optional<ButtonType> errorMsg = UIUtil.showAlertDialog("当前任务未开始", "提示" ,Alert.AlertType.WARNING);
+                return;
+            }
             Optional<ButtonType> result = UIUtil.showAlertDialog("确定要结束【" + selectedLive.getLivePageUrl() + "】吗？", "删除", Alert.AlertType.CONFIRMATION);
             result.ifPresent(btnType -> {
                 if (btnType.equals(ButtonType.OK)) {

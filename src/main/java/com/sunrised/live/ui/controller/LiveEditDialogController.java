@@ -43,7 +43,7 @@ public class LiveEditDialogController implements Initializable {
     private void handleOk() {
         Live live = new Live(livePageUrlField.getText(), pathField.getText(), saveNameField.getText(), statusField.getText());
         livePageUrlField.setText(null);
-        pathField.setText(null);
+        //pathField.setText(null);
         saveNameField.setText(null);
         liveEditDialog.setLive(live);
         liveEditDialog.getStage().close();
