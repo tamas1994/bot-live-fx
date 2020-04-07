@@ -22,8 +22,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.net.URL;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Slf4j
 @FXMLController
@@ -59,6 +59,7 @@ public class LiveListController implements Initializable {
     private Label titleLabel;
 
     private BusListener busListener;
+
     @FXML
     private BusListener getBusListener() {
         if (busListener == null) {
@@ -66,7 +67,7 @@ public class LiveListController implements Initializable {
                 @Override
                 public void onMessage(String key, String message) {
                     Live selectedItem = liveTable.getSelectionModel().getSelectedItem();
-                    if(selectedItem != null && selectedItem.getLivePageUrl().equals(key)) {
+                    if (selectedItem != null && selectedItem.getLivePageUrl().equals(key)) {
                         log(message);
                     }
                 }
@@ -99,7 +100,7 @@ public class LiveListController implements Initializable {
 
     private void setTile(String title) {
         titleLabel.setText(title);
-        Platform.runLater(() -> textArea.setText(title+"\n"));
+        Platform.runLater(() -> textArea.setText(title + "\n"));
     }
 
     /**
@@ -110,7 +111,7 @@ public class LiveListController implements Initializable {
 
         Live selectedLive = liveTable.getSelectionModel().getSelectedItem();
         if (selectedLive != null) {
-            if(liveProcessService.isTaskProcessing(selectedLive.getLivePageUrl())) {
+            if (liveProcessService.isTaskProcessing(selectedLive.getLivePageUrl())) {
                 Optional<ButtonType> result = UIUtil.showAlertDialog("当前任务正在进行中，请先停止任务后再进行删除操作", "删除", Alert.AlertType.WARNING);
                 return;
             }
@@ -157,8 +158,8 @@ public class LiveListController implements Initializable {
     private void handleStopLive() {
         Live selectedLive = liveTable.getSelectionModel().getSelectedItem();
         if (selectedLive != null) {
-            if(!"开始".equals(selectedLive.getStatus())) {
-                Optional<ButtonType> errorMsg = UIUtil.showAlertDialog("当前任务未开始", "提示" ,Alert.AlertType.WARNING);
+            if (!"开始".equals(selectedLive.getStatus())) {
+                Optional<ButtonType> errorMsg = UIUtil.showAlertDialog("当前任务未开始", "提示", Alert.AlertType.WARNING);
                 return;
             }
             Optional<ButtonType> result = UIUtil.showAlertDialog("确定要结束【" + selectedLive.getLivePageUrl() + "】吗？", "删除", Alert.AlertType.CONFIRMATION);
@@ -219,7 +220,7 @@ public class LiveListController implements Initializable {
                 @Override
                 public void onSendMsg(String msg) {
                     // todo msg -> 输出到控制台
-                    getBusListener().onMessage(selectedItem.getLivePageUrl(),msg);
+                    getBusListener().onMessage(selectedItem.getLivePageUrl(), msg);
                 }
 
                 @Override
@@ -233,8 +234,10 @@ public class LiveListController implements Initializable {
 
 
             Result result = liveProcessService.startTask(selectedItem.getLivePageUrl(), selectedItem.getPath(), selectedItem.getSaveName(), taskListener);
-            if(result.getStatus() == 1) {
+            if (result.getStatus() == 1) {
                 selectedItem.setStatus("开始");
+            } else {
+                UIUtil.showAlertDialog(result.getMessage(), "提示", Alert.AlertType.ERROR);
             }
         } else {
             Optional<ButtonType> result = UIUtil.showAlertDialog("请选择要下载的直播地址", "提示", Alert.AlertType.WARNING);
@@ -247,7 +250,7 @@ public class LiveListController implements Initializable {
      * @param str
      */
     private void log(String str) {
-        log.error("current_log:"+str);
+        log.error("current_log:" + str);
         Platform.runLater(() -> textArea.setText(limit(textArea.getText(), str)));
     }
 
@@ -263,8 +266,8 @@ public class LiveListController implements Initializable {
         }
 
         int length = content.length();
-        if(length > 1500) {
-            return content.substring(length-1500, length);
+        if (length > 1500) {
+            return content.substring(length - 1500, length);
         } else {
             return content;
         }
@@ -282,28 +285,28 @@ public class LiveListController implements Initializable {
     }
 
     public String limit(String content, String row) {
-        if(content == null) {
+        if (content == null) {
             content = "Null Content...\n";
         }
 
-        if(row == null) {
+        if (row == null) {
             row = "Null Content...\n";
         }
 
-        String newContent = content+row+"\n";
+        String newContent = content + row + "\n";
 
         String[] split = newContent.split("\n");
-        if(ArrayUtils.isEmpty(split)) {
+        if (ArrayUtils.isEmpty(split)) {
             return content;
         }
 
         int currentLength = split.length;
-        if(currentLength <= MAX_CONTENT_LENGTH) {
+        if (currentLength <= MAX_CONTENT_LENGTH) {
             return newContent;
         } else {
             StringBuffer sb = new StringBuffer();
             sb.append(split[0]).append("\n");
-            for(int i= currentLength - MAX_CONTENT_LENGTH; i < currentLength; i++) {
+            for (int i = currentLength - MAX_CONTENT_LENGTH; i < currentLength; i++) {
                 sb.append(split[i]).append("\n");
             }
             return sb.toString();
