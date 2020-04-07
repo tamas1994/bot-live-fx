@@ -42,7 +42,7 @@ public class CmdUtil {
         }
     }
 
-    public static String runCommandI(String command, TaskListener taskListener) {
+    public static String runCommandI(String taskKey, String command, TaskListener taskListener) {
         try {
             if (isWindows()) {
                 command = prehandleCommand(command);
@@ -54,10 +54,10 @@ public class CmdUtil {
 
 
             boolean isShowOutput = true;
-            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), p.getOutputStream(), StreamGobbler.TYPE_ERROR, taskListener);
+            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), p.getOutputStream(), taskKey, taskListener);
             // kick off stderr
             errorGobbler.start();
-            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), StreamGobbler.TYPE_STDOUT);
+            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), taskKey);
             // kick off stdout
             outGobbler.start();
             p.waitFor();
@@ -85,10 +85,10 @@ public class CmdUtil {
             Process p = Runtime.getRuntime().exec(commands);
 
             boolean isShowOutput = true;
-            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), StreamGobbler.TYPE_ERROR);
+            StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), "nokey");
             // kick off stderr
             errorGobbler.start();
-            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), StreamGobbler.TYPE_STDOUT);
+            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), "nokey");
             // kick off stdout
             outGobbler.start();
             p.waitFor();

@@ -31,11 +31,7 @@ public class TaskMapManagerSingleton {
 
     private Map<String, Integer> getTaskMap() {
         if (taskMap == null) {
-            synchronized (taskMap) {
-                if (taskMap == null) {
-                    taskMap = new HashMap<>();
-                }
-            }
+            taskMap = new HashMap<>();
         }
         return taskMap;
     }

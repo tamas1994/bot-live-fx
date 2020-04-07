@@ -1,6 +1,7 @@
 package com.sunrised.live.biz.util;
 
 import com.sunrised.live.biz.TaskListener;
+import com.sunrised.live.biz.TaskMapManagerSingleton;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -15,11 +16,8 @@ public class StreamGobbler extends Thread {
 
     private static final long MINUTE_MILLIS = 60000L;
 
-    public static final String TYPE_ERROR = "ERROR";
-    public static final String TYPE_STDOUT = "STDOUT";
 
     InputStream is;
-    String type;
     OutputStream os;
 
     TaskListener taskListener;
@@ -27,9 +25,11 @@ public class StreamGobbler extends Thread {
     OutputStream commandOs;
     long createMillis;
 
+    String taskKey;
 
-    StreamGobbler(InputStream is, String type) {
-        this(is, type, null);
+
+    StreamGobbler(InputStream is, String taskKey) {
+        this(is, taskKey, null);
     }
 
     StreamGobbler(InputStream is, OutputStream os, String type, TaskListener taskListener) {
@@ -39,9 +39,9 @@ public class StreamGobbler extends Thread {
         this.taskListener = taskListener;
     }
 
-    StreamGobbler(InputStream is, String type, OutputStream redirect) {
+    StreamGobbler(InputStream is, String taskKey, OutputStream redirect) {
         this.is = is;
-        this.type = type;
+        this.taskKey = taskKey;
         this.os = redirect;
 
     }
@@ -67,13 +67,15 @@ public class StreamGobbler extends Thread {
 
                 taskListener.onSendMsg(line);
 
-                if (this.createMillis > 0 && commandOs != null) {
-                    long now = System.currentTimeMillis();
-                    if (now - createMillis > MINUTE_MILLIS * 90) {
-                        String command = "q";
-                        commandOs.write(command.getBytes());
-                        commandOs.flush();
-                    }
+                Integer status = TaskMapManagerSingleton.getInstance().get(taskKey);
+                boolean finishCondition1 = status != null && status == TaskMapManagerSingleton.STATUS_FINISHED;
+                boolean finishCondition2 = System.currentTimeMillis() - createMillis > MINUTE_MILLIS * 90;
+                //上述两个条件满足任意一个就结束
+                if (commandOs != null && (finishCondition1 || finishCondition2)) {
+                    String command = "q";
+                    commandOs.write(command.getBytes());
+                    commandOs.flush();
+                    taskListener.onTaskStop();
                 }
             }
             if (pw != null) {
@@ -85,5 +87,6 @@ public class StreamGobbler extends Thread {
         } finally {
             log.info("清理流");
         }
+        taskListener.onTaskStop();
     }
 }

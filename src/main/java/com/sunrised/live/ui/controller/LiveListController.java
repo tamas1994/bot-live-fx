@@ -119,6 +119,14 @@ public class LiveListController implements Initializable {
      */
     @FXML
     private void handleStopLive() {
+
+        String livePageUrl = "https://v.douyin.com/cMSMq3/";
+        liveProcessService.sendStopTaskRequest(livePageUrl);
+
+        if (true) {
+            return;
+        }
+
         Live selectedLive = liveTable.getSelectionModel().getSelectedItem();
         if (selectedLive != null) {
             Optional<ButtonType> result = UIUtil.showAlertDialog("确定要停止【" + selectedLive.getLivePageUrl() + "】吗？", "删除", Alert.AlertType.CONFIRMATION);
@@ -165,9 +173,9 @@ public class LiveListController implements Initializable {
      */
     @FXML
     private void handleStartLive() {
-        String livePageUrl = "https://v.douyin.com/vpecfU/";
+        String livePageUrl = "https://v.douyin.com/cMSMq3/";
         String savePath = "/Users/tamas/Desktop/live-video";
-        String saveName = "1842";
+        String saveName = "1847";
 
         TaskListener taskListener = new TaskListener() {
             @Override

@@ -8,9 +8,9 @@ import com.sunrised.live.biz.TaskListener;
  */
 public class LiveFFmpegUtil {
 
-    public static void downloadLiveVideoStream(String m3u8Url, String outputPath, TaskListener taskListener) {
+    public static void downloadLiveVideoStream(String taskKey, String m3u8Url, String outputPath, TaskListener taskListener) {
         String command = "ffmpeg -i " + m3u8Url + " -vcodec copy -acodec copy -absf aac_adtstoasc " + outputPath;
-        CmdUtil.runCommandI(command, taskListener);
+        CmdUtil.runCommandI(taskKey, command, taskListener);
     }
 
 
