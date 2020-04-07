@@ -25,6 +25,8 @@ public class LiveEditDialogController implements Initializable {
     private TextField pathField;
     @FXML
     private TextField saveNameField;
+    @FXML
+    private TextField statusField;
 
     @Autowired
     private LiveEditDialog liveEditDialog;
@@ -39,7 +41,7 @@ public class LiveEditDialogController implements Initializable {
 
     @FXML
     private void handleOk() {
-        Live live = new Live(livePageUrlField.getText(), pathField.getText(), saveNameField.getText());
+        Live live = new Live(livePageUrlField.getText(), pathField.getText(), saveNameField.getText(), statusField.getText());
         livePageUrlField.setText(null);
         pathField.setText(null);
         saveNameField.setText(null);

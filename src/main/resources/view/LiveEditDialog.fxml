@@ -14,6 +14,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label text="直播地址" />
@@ -22,6 +23,8 @@
                 <Label text="文件名称" GridPane.rowIndex="2" />
                 <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <TextField fx:id="saveNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="任务状态" GridPane.rowIndex="3" />
+            <TextField fx:id="statusField" disable="true" editable="false" text="新建" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             </children>
         </GridPane>
         <HBox layoutX="197.1875" layoutY="241.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

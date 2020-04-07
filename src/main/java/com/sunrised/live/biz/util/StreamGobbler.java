@@ -87,6 +87,7 @@ public class StreamGobbler extends Thread {
         } finally {
             log.info("清理流");
         }
+        TaskMapManagerSingleton.getInstance().put(taskKey,TaskMapManagerSingleton.STATUS_FINISHED);
         taskListener.onTaskStop();
     }
 }

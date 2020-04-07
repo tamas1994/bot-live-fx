@@ -1,7 +1,6 @@
 package com.sunrised.live.biz;
 
 public interface TaskListener {
-
     /**
      * 任务结束时回调此方法
      */
@@ -15,5 +14,4 @@ public interface TaskListener {
     void onSendMsg(String msg);
 
     void onAddError(String errMsg);
-
 }

@@ -14,6 +14,7 @@
                       <TableColumn fx:id="livePageUrlColumn" prefWidth="75.0" text="直播地址" />
                         <TableColumn fx:id="pathColumn" prefWidth="75.0" text="存放路径" />
                         <TableColumn fx:id="saveNameColumn" prefWidth="75.0" text="文件名称" />
+                        <TableColumn fx:id="statusColumn" prefWidth="75.0" text="任务状态" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

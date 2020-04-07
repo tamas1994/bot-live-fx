@@ -33,6 +33,17 @@ public class LiveProcessService {
     private static final String PREFIX_HUAJIAO = "http://h.huajiao.com";
     private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
 
+    public boolean isTaskProcessing(String key){
+        Integer status=TaskMapManagerSingleton.getInstance().get(key);
+        if (status==null){
+            return false;
+        }
+        if (status==TaskMapManagerSingleton.STATUS_ING){
+            return true;
+        }
+        return false;
+    }
+
     public String sendStopTaskRequest(String livePageUrl) {
         Integer status = TaskMapManagerSingleton.getInstance().get(livePageUrl);
         if (status == null) {
@@ -49,24 +60,24 @@ public class LiveProcessService {
 
     }
 
-    public void startTask(String livePageUrl, String path, String saveName, TaskListener taskListener) {
+    public Result startTask(String livePageUrl, String path, String saveName, TaskListener taskListener) {
 
         String filePath = path + File.separator + saveName + ".mp4";
         File file = new File(filePath);
         if (file.exists()) {
-            Result.fail("文件已存在，重命名");
+            return Result.fail("文件已存在，重命名");
         }
         TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_ING);
         if (livePageUrl.startsWith(PREFIX_DOUYIN)) {
-            this.processDouyin(livePageUrl, path, saveName, taskListener);
+            return this.processDouyin(livePageUrl, path, saveName, taskListener);
         } else if (livePageUrl.startsWith(PREFIX_KUAISHOU)) {
-            this.processKuaishou(livePageUrl, path, saveName, taskListener);
+            return this.processKuaishou(livePageUrl, path, saveName, taskListener);
         } else if (livePageUrl.startsWith(PREFIX_HUAJIAO) || livePageUrl.startsWith(PREFIX_HUAJIAO2)) {
-            this.processHuajiao(livePageUrl, path, saveName, taskListener);
+            return this.processHuajiao(livePageUrl, path, saveName, taskListener);
         } else {
             TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_ERROR);
-            Result.fail("只支持抖音、快手、花椒直播页面");
             taskListener.onAddError("只支持抖音、快手、花椒直播页面");
+            return Result.fail("只支持抖音、快手、花椒直播页面");
         }
     }
 

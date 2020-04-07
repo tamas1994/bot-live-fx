@@ -7,12 +7,13 @@ public class Live {
     private final StringProperty livePageUrl;
     private final StringProperty path;
     private final StringProperty saveName;
+    private final StringProperty status;
 
     /**
      * Default constructor.
      */
     public Live() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     /**
@@ -22,10 +23,11 @@ public class Live {
      * @param path
      * @Param saveName
      */
-    public Live(String livePageUrl, String path, String saveName) {
+    public Live(String livePageUrl, String path, String saveName, String status) {
         this.livePageUrl = new SimpleStringProperty(livePageUrl);
         this.path = new SimpleStringProperty(path);
         this.saveName = new SimpleStringProperty(saveName);
+        this.status = new SimpleStringProperty(status);
     }
 
     public String getLivePageUrl() {
@@ -62,5 +64,17 @@ public class Live {
 
     public void setSaveName(String saveName) {
         this.saveName.set(saveName);
+    }
+
+    public String getStatus() {
+        return status.get();
+    }
+
+    public StringProperty statusProperty() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status.set(status);
     }
 }
