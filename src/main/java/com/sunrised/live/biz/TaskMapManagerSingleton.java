@@ -9,6 +9,12 @@ public class TaskMapManagerSingleton {
     public static final int STATUS_FINISHED=2;
     public static final int STATUS_ERROR=3;
 
+    //请求结束
+    public static final int STATUS_REQ_FINISH=7;
+
+    //正常的结束 到90分钟或者主动触发结束
+    public static final int STATUS_FINISHED_NORMAL=6;
+
     private static TaskMapManagerSingleton instance;
 
     private TaskMapManagerSingleton() {

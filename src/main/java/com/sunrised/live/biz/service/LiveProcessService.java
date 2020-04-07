@@ -53,7 +53,7 @@ public class LiveProcessService {
             return "该任务已经是结束状态";
         }
         if (status == TaskMapManagerSingleton.STATUS_ING) {
-            TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_FINISHED);
+            TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_REQ_FINISH);
             return "发送结束任务请求成功，稍等几秒后任务会自动结束";
         }
         return "发生了其他异常";
