@@ -33,12 +33,12 @@ public class LiveProcessService {
     private static final String PREFIX_HUAJIAO = "http://h.huajiao.com";
     private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
 
-    public boolean isTaskProcessing(String key){
-        Integer status=TaskMapManagerSingleton.getInstance().get(key);
-        if (status==null){
+    public boolean isTaskProcessing(String key) {
+        Integer status = TaskMapManagerSingleton.getInstance().get(key);
+        if (status == null) {
             return false;
         }
-        if (status==TaskMapManagerSingleton.STATUS_ING){
+        if (status == TaskMapManagerSingleton.STATUS_ING) {
             return true;
         }
         return false;
@@ -62,11 +62,21 @@ public class LiveProcessService {
 
     public Result startTask(String livePageUrl, String path, String saveName, TaskListener taskListener) {
 
-        String filePath = path + File.separator + saveName + ".mp4";
-        File file = new File(filePath);
+
+        String fileName = saveName + "-" + 0 + ".mp4";
+        fileName = fileName.replace(" ", "");
+        fileName = fileName.replace(":", "-");
+
+        File file = new File(path, fileName);
         if (file.exists()) {
-            return Result.fail("文件已存在，重命名");
+            return Result.fail("文件已存在，请重命名");
         }
+
+        Integer existTaskStatus = TaskMapManagerSingleton.getInstance().get(livePageUrl);
+        if (existTaskStatus != null && existTaskStatus == TaskMapManagerSingleton.STATUS_ING) {
+            return Result.fail("该任务正在处理，请换一个");
+        }
+
         TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_ING);
         if (livePageUrl.startsWith(PREFIX_DOUYIN)) {
             return this.processDouyin(livePageUrl, path, saveName, taskListener);

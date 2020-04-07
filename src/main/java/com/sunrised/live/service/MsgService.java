@@ -19,8 +19,8 @@ public class MsgService {
 
     public List<Live> getLiveList() {
         List<Live> lives = new ArrayList<>();
-        lives.add(new Live("https://v.douyin.com/cMv2Ag/", "E:\\live", UUID.randomUUID().toString(), "新建"));
-        lives.add(new Live("https://v.douyin.com/cr6j4d/", "E:\\live", UUID.randomUUID().toString(), "新建"));
+//        lives.add(new Live("https://v.douyin.com/cMv2Ag/", "E:\\live", UUID.randomUUID().toString(), "新建"));
+//        lives.add(new Live("https://v.douyin.com/cr6j4d/", "E:\\live", UUID.randomUUID().toString(), "新建"));
         return lives;
     }
 }
