@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunrised.live.ui.controller.RegisterDialogController">
+   <children>
+      <Label layoutX="83.0" layoutY="172.0" text="Label" />
+      <Button layoutX="356.0" layoutY="255.0" mnemonicParsing="false" onAction="#handleRegister" text="Button" />
+      <TextField fx:id="keyField" layoutX="183.0" layoutY="168.0" prefHeight="23.0" prefWidth="312.0" />
+   </children>
+</AnchorPane>

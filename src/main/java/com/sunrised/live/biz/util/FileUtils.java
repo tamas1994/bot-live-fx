@@ -34,6 +34,30 @@ public class FileUtils {
         return file.getAbsolutePath();
     }
 
+    public static String readTextFromFile(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return "";
+        }
+        StringBuilder textBuilder = new StringBuilder();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
+            while (true) {
+                String line = bufferedReader.readLine();
+                if (line==null){
+                    break;
+                }
+                textBuilder.append(line);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return textBuilder.toString();
+    }
+
     public static void saveBytesToFile(byte[] bfile, String filePath, String fileName) {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
@@ -80,9 +104,9 @@ public class FileUtils {
             return null;
         }
         String fileName = file.getName();
-        log.info("之前文件名："+fileName);
+        log.info("之前文件名：" + fileName);
         String fileNameWithoutSufix = fileName.split("[.]")[0];
-        log.info("之后文件名："+fileNameWithoutSufix);
+        log.info("之后文件名：" + fileNameWithoutSufix);
         return fileNameWithoutSufix;
     }
 
