@@ -2,11 +2,15 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunrised.live.ui.controller.RegisterDialogController">
+<AnchorPane prefHeight="100.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunrised.live.ui.controller.RegisterDialogController">
    <children>
-      <Label layoutX="83.0" layoutY="172.0" text="Label" />
-      <Button layoutX="356.0" layoutY="255.0" mnemonicParsing="false" onAction="#handleRegister" text="Button" />
-      <TextField fx:id="keyField" layoutX="183.0" layoutY="168.0" prefHeight="23.0" prefWidth="312.0" />
+      <Label layoutX="88.0" layoutY="43.0" text="授权码">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Button layoutX="487.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleRegister" text="保存" />
+      <TextField fx:id="keyField" layoutX="150.0" layoutY="41.0" prefHeight="23.0" prefWidth="312.0" />
    </children>
 </AnchorPane>
