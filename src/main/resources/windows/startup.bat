@@ -1,3 +1,3 @@
 @echo off
-start java -jar bot-live.jar
+start javaw -jar bot-live.jar
 exit
