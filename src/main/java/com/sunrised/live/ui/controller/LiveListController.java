@@ -226,7 +226,7 @@ public class LiveListController implements Initializable {
                 @Override
                 public void onAddError(String errMsg) {
                     selectedItem.setStatus("异常");
-                    Optional<ButtonType> result = UIUtil.showAlertDialog("启动任务异常，即将删除当前任务", "提示", Alert.AlertType.WARNING);
+                    Optional<ButtonType> result = UIUtil.showAlertDialog("启动任务异常:" + errMsg + ",即将删除当前任务", "提示", Alert.AlertType.WARNING);
                     log.error("启动任务异常：{}", errMsg);
                     handleDeleteLive();
                 }
