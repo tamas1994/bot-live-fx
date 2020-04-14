@@ -30,6 +30,7 @@ public class LiveProcessService {
 
     private static final String PREFIX_DOUYIN = "https://v.douyin.com";
     private static final String PREFIX_KUAISHOU = "https://v.kuaishou.com";
+    private static final String PREFIX_KUAISHOU2 = "https://f.kuaishou.com";
     private static final String PREFIX_HUAJIAO = "http://h.huajiao.com";
     private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
 
@@ -80,7 +81,7 @@ public class LiveProcessService {
         TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_ING);
         if (livePageUrl.startsWith(PREFIX_DOUYIN)) {
             return this.processDouyin(livePageUrl, path, saveName, taskListener);
-        } else if (livePageUrl.startsWith(PREFIX_KUAISHOU)) {
+        } else if (livePageUrl.startsWith(PREFIX_KUAISHOU) || livePageUrl.startsWith(PREFIX_KUAISHOU2)) {
             return this.processKuaishou(livePageUrl, path, saveName, taskListener);
         } else if (livePageUrl.startsWith(PREFIX_HUAJIAO) || livePageUrl.startsWith(PREFIX_HUAJIAO2)) {
             return this.processHuajiao(livePageUrl, path, saveName, taskListener);
