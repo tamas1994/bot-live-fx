@@ -25,7 +25,13 @@ public class AsyncService {
             if (status != TaskMapManagerSingleton.STATUS_ING) {
                 break;
             }
+            try {
+                Thread.sleep(10000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        taskListener.onTaskStop();
         TaskMapManagerSingleton.getInstance().put(taskKey,TaskMapManagerSingleton.STATUS_FINISHED);
     }
 }

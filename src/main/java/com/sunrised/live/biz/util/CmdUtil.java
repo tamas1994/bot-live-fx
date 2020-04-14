@@ -57,7 +57,7 @@ public class CmdUtil {
             StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream(), p.getOutputStream(), taskKey, taskListener);
             // kick off stderr
             errorGobbler.start();
-            StreamGobbler outGobbler = new StreamGobbler(p.getInputStream(), taskKey);
+            StreamGobbler outGobbler = new StreamGobbler(p.getErrorStream(), p.getOutputStream(), taskKey, taskListener);
             // kick off stdout
             outGobbler.start();
             p.waitFor();

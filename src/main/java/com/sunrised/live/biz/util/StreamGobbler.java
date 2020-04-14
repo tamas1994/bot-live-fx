@@ -72,14 +72,15 @@ public class StreamGobbler extends Thread {
                 boolean finishCondition2 = System.currentTimeMillis() - createMillis > MINUTE_MILLIS * 90;
                 //上述两个条件满足任意一个就结束
                 if (commandOs != null && (finishCondition1 || finishCondition2)) {
+                    taskListener.onSendMsg("收到任务结束信号");
                     taskListener.onSendMsg("准备结束任务");
                     String command = "q";
                     commandOs.write(command.getBytes());
                     commandOs.flush();
+
                     taskListener.onTaskStop();
                     //发送正常结束信号
                     TaskMapManagerSingleton.getInstance().put(taskKey,TaskMapManagerSingleton.STATUS_FINISHED_NORMAL);
-
                 }
             }
             if (pw != null) {
@@ -91,6 +92,5 @@ public class StreamGobbler extends Thread {
         } finally {
             log.info("清理流");
         }
-        taskListener.onTaskStop();
     }
 }
