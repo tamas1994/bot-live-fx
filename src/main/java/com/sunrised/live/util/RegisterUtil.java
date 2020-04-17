@@ -18,6 +18,8 @@ import java.util.Scanner;
 
 public class RegisterUtil {
 
+    private static long timestamp = -1;
+
     public static String getCPUSerialNumber() throws IOException {
 
         Process process = Runtime.getRuntime().exec(new String[]{"wmic", "cpu", "get", "ProcessorId"});
@@ -72,6 +74,17 @@ public class RegisterUtil {
     }
 
     public static RegisterResult doRegister() {
+
+        if(timestamp != -1) {
+            if(System.currentTimeMillis() - timestamp < 5*60*1000) {
+                RegisterResult result = new RegisterResult();
+                result.setStatus(RegisterResult.STATUS_OK);
+                result.setMessage("5\u5206\u949f\u5185\u4e0d\u518d\u9a8c\u8bc1");
+                return result;
+            }
+        }
+
+        timestamp = System.currentTimeMillis();
         try {
             String key = RegisterUtil.readKeyFromFile();
             String serialNumber = RegisterUtil.getMixSerialNumber();
