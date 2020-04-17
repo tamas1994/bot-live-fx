@@ -27,10 +27,10 @@ public class RegisterDialogController implements Initializable {
         this.keyField.setText(RegisterUtil.readKeyFromFile());
         String key = keyField.getText();
         String serialNumber = RegisterUtil.getMixSerialNumber();
-        RegisterResult result = RegisterUtil.doRegister(key, serialNumber);
-        Platform.runLater(() -> {
-            UIUtil.showAlertDialog(result.getMessage(), "提示", Alert.AlertType.WARNING);
-        });
+       // RegisterResult result = RegisterUtil.doRegister();
+//        Platform.runLater(() -> {
+//            UIUtil.showAlertDialog(result.getMessage(), "提示", Alert.AlertType.WARNING);
+//        });
     }
 
     @FXML

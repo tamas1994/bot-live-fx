@@ -20,10 +20,8 @@ public class LiveApplication extends AbstractJavaFxApplicationSupport {
         ToolUtil.enhanceTools();
         //launch(LiveApplication.class, StartView.class, new Splash(), args);
 
-        String key = RegisterUtil.readKeyFromFile();
-        String serialNumber = RegisterUtil.getMixSerialNumber();
-        RegisterResult result = RegisterUtil.doRegister(key, serialNumber);
-        if(result.getStatus() == RegisterResult.STATUS_OK) {
+        RegisterResult result = RegisterUtil.doRegister();
+        if(result != null && (result.getStatus() == RegisterResult.STATUS_OK)) {
             launch(LiveApplication.class, StartView.class, new Splash(), args);
         } else {
             launch(LiveApplication.class, RegisterDialog.class, new Splash(), args);

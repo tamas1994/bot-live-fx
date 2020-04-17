@@ -10,4 +10,5 @@ public class RegisterResult {
 
     private int status;
     private String message;
+
 }

@@ -5,9 +5,11 @@ import com.sunrised.live.biz.TaskListener;
 import com.sunrised.live.biz.bean.Result;
 import com.sunrised.live.biz.service.LiveProcessService;
 import com.sunrised.live.model.Live;
+import com.sunrised.live.model.RegisterResult;
 import com.sunrised.live.service.MsgService;
 import com.sunrised.live.ui.view.StartView;
 import com.sunrised.live.ui.view.dialog.LiveEditDialog;
+import com.sunrised.live.util.RegisterUtil;
 import com.sunrised.live.util.UIUtil;
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.application.Platform;
@@ -131,6 +133,9 @@ public class LiveListController implements Initializable {
      */
     @FXML
     private void handleNewLive() {
+        if(RegisterUtil.doRegister().getStatus() == RegisterResult.STATUS_ERROR) {
+            return;
+        }
         liveEditDialog.setLive(new Live());
         Stage stg = liveEditDialog.getStage();
         if (liveEditDialog.getStage() != null && stg.getOwner() != startView.getStage()) {
@@ -208,6 +213,9 @@ public class LiveListController implements Initializable {
      */
     @FXML
     private void handleStartLive() {
+        if(RegisterUtil.doRegister().getStatus() == RegisterResult.STATUS_ERROR) {
+            return;
+        }
         Live selectedItem = liveTable.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             TaskListener taskListener = new TaskListener() {
