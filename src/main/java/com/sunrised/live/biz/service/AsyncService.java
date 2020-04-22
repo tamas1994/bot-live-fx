@@ -16,7 +16,7 @@ public class AsyncService {
     @Async
     public void downloadLiveStream(String taskKey, String m3u8Url, String savePath, String username, String saveName, TaskListener taskListener) {
         //String fileName = username + MyDateUtil.yyyymmddhhmmss(System.currentTimeMillis()) + ".mp4";
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50; i++) {
             String fileName = saveName + "-" + i + ".mp4";
             fileName = fileName.replace(" ", "");
             fileName = fileName.replace(":", "-");
@@ -32,6 +32,6 @@ public class AsyncService {
             }
         }
         taskListener.onTaskStop();
-        TaskMapManagerSingleton.getInstance().put(taskKey,TaskMapManagerSingleton.STATUS_FINISHED);
+        TaskMapManagerSingleton.getInstance().put(taskKey, TaskMapManagerSingleton.STATUS_FINISHED);
     }
 }
