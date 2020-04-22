@@ -69,7 +69,7 @@ public class StreamGobbler extends Thread {
 
                 Integer status = TaskMapManagerSingleton.getInstance().get(taskKey);
                 boolean finishCondition1 = status != null && status == TaskMapManagerSingleton.STATUS_REQ_FINISH;
-                boolean finishCondition2 = System.currentTimeMillis() - createMillis > MINUTE_MILLIS * 90;
+                boolean finishCondition2 = System.currentTimeMillis() - createMillis > MINUTE_MILLIS * 180;
                 //上述两个条件满足任意一个就结束
                 if (commandOs != null && (finishCondition1 || finishCondition2)) {
                     taskListener.onSendMsg("收到任务结束信号");
