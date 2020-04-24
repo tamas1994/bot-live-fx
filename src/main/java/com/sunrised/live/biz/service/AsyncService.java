@@ -15,6 +15,7 @@ import java.io.File;
 public class AsyncService {
     @Async
     public void downloadLiveStream(String taskKey, String m3u8Url, String savePath, String username, String saveName, TaskListener taskListener) {
+       m3u8Url="\""+m3u8Url+"\"";
         //String fileName = username + MyDateUtil.yyyymmddhhmmss(System.currentTimeMillis()) + ".mp4";
         for (int i = 0; i < 50; i++) {
             String fileName = saveName + "-" + i + ".mp4";

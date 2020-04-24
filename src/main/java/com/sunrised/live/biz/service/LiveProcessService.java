@@ -1,9 +1,11 @@
 package com.sunrised.live.biz.service;
 
 
+import com.google.gson.Gson;
 import com.sunrised.live.biz.TaskListener;
 import com.sunrised.live.biz.TaskMapManagerSingleton;
 import com.sunrised.live.biz.bean.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.io.File;
 /**
  * Created by tamas on 2020/3/26.
  */
+@Slf4j
 @Service
 public class LiveProcessService {
 
@@ -156,11 +159,15 @@ public class LiveProcessService {
             return Result.fail(errorMessage);
         }
 
+        log.info("kuaishouStreamInfo:"+new Gson().toJson(kuaishouStreamInfo));
+
         String m3u8Url = kuaishouStreamInfo.getM3u8Url();
+        /*
         if (m3u8Url.contains("?")) {
             String[] strArr = m3u8Url.split("\\?");
             m3u8Url = strArr[0];
         }
+        */
         asyncService.downloadLiveStream(livePageUrl, m3u8Url, savePath, kuaishouStreamInfo.getUserName(), saveName, taskListener);
         return Result.success("添加快手用户" + kuaishouStreamInfo.getUserName() + "的直播流下载任务成功");
     }
