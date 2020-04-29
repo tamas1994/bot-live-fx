@@ -30,12 +30,18 @@ public class LiveProcessService {
     @Autowired
     KuaishouAgentService kuaishouAgentService;
 
+    @Autowired
+    HuoshanAgentService huoshanAgentService;
+
 
     private static final String PREFIX_DOUYIN = "https://v.douyin.com";
     private static final String PREFIX_KUAISHOU = "https://v.kuaishou.com";
     private static final String PREFIX_KUAISHOU2 = "https://f.kuaishou.com";
     private static final String PREFIX_HUAJIAO = "http://h.huajiao.com";
     private static final String PREFIX_HUAJIAO2 = "https://h.huajiao.com";
+
+    private static final String PREFIX_HUOSHAN = "http://reflow.huoshan.com";
+    private static final String PREFIX_HUOSHAN2 = "https://reflow.huoshan.com";
 
     public boolean isTaskProcessing(String key) {
         Integer status = TaskMapManagerSingleton.getInstance().get(key);
@@ -88,9 +94,11 @@ public class LiveProcessService {
             return this.processKuaishou(livePageUrl, path, saveName, taskListener);
         } else if (livePageUrl.startsWith(PREFIX_HUAJIAO) || livePageUrl.startsWith(PREFIX_HUAJIAO2)) {
             return this.processHuajiao(livePageUrl, path, saveName, taskListener);
+        }else if (livePageUrl.startsWith(PREFIX_HUOSHAN) || livePageUrl.startsWith(PREFIX_HUOSHAN2)) {
+            return this.processHuoshan(livePageUrl, path, saveName, taskListener);
         } else {
             TaskMapManagerSingleton.getInstance().put(livePageUrl, TaskMapManagerSingleton.STATUS_ERROR);
-            taskListener.onAddError("只支持抖音、快手、花椒直播页面");
+            taskListener.onAddError("只支持抖音、快手、花椒、火山直播页面");
             return Result.fail("只支持抖音、快手、花椒直播页面");
         }
     }
@@ -129,6 +137,32 @@ public class LiveProcessService {
         return Result.success("添加抖音用户" + douyinStreamInfo.getNickname() + "的直播流下载任务成功");
     }
 
+    /**
+     * 处理火山直播
+     * @param livePageUrl
+     * @param savePath
+     * @param saveName
+     * @param taskListener
+     * @return
+     */
+    private Result processHuoshan(String livePageUrl, String savePath, String saveName, TaskListener taskListener) {
+
+        if (!this.isSavePathOk(savePath)) {
+            String errorMessage = "视频保存路径不存在，请重新设置";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
+        }
+
+        HuoshanStreamInfo huoshanStreamInfo = huoshanAgentService.getHuoshanStreamInfo(livePageUrl);
+        if (huoshanStreamInfo == null) {
+            String errorMessage = "获取火山直播流失败";
+            taskListener.onAddError(errorMessage);
+            return Result.fail(errorMessage);
+        }
+        //TODO 判断直播是否结束
+        asyncService.downloadLiveStream(livePageUrl, huoshanStreamInfo.getM3u8Url(), savePath, huoshanStreamInfo.getNickname(), saveName, taskListener);
+        return Result.success("添加抖音用户" + huoshanStreamInfo.getNickname() + "的直播流下载任务成功");
+    }
 
     /**
      * 处理快手视频流
